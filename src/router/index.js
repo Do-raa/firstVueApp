@@ -6,12 +6,12 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/form',
+    path: '/addUser',
     name: 'UserForm',
     component: UserForm
   },
   {
-    path: '/users',
+    path: '/',
     name: 'Users',
     component: () => import('../views/UsersList.vue')
   }

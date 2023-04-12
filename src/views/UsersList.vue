@@ -1,45 +1,106 @@
 <template>
     <div>
-        <h2>Users List</h2> 
-        <div class="container">
-            <ul v-for="user in users" :key="user.id">
+        <h2>USERS LIST</h2> 
+        <button v-on:click="redirect">ADD USER</button>
+        <div >
+            <ul class="container" v-for="user in users" :key="user.id"> 
                 <div class="content">
                     <li>{{ user.name }}</li> 
                     <p>{{ user.email }}</p> 
                 </div>
-                <div class="trash">
+                <div class="trash" @click="deleteUser(user.id)">
                     <p>X</p>
                 </div>
             </ul>
-        </div>
+        </div> 
     </div>
 </template> 
 
 
-<script>
+<script> 
+import router from '../router'
+
 export default {
     //name: 'UsersList', 
     computed: {
-        users() {
-            return this.$store.state.users
+        users: { 
+            get() {
+                return this.$store.state.users
+            }, 
+            set( user ) {
+                return this.$store.commit('setUsers', user)
+            }
         }
     }, 
-    mounted() {
-        this.users
+    methods: {
+        deleteUser(userId) { 
+            alert('Are you sure you want to delete this user?')
+            this.$store.dispatch("deleteUser", userId);
+        }, 
+        redirect() {
+            router.push({path: '/addUser', replace: true})
+        }
+    },
+    mounted() { 
+        this.$store.dispatch('fetchUsers');
     }
 }
 </script> 
 
-<style scoped>
+<style scoped> 
+
+h2 {
+    margin-top: 80px;
+    margin-bottom: 50px; 
+    color : #D14D72; 
+    font-weight: bold; 
+    text-align: center;
+} 
+
+.content {
+    margin-left: max(10px,15px);
+    font-size: 20px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+} 
+
+li {
+    color :#009FBD; 
+    font-weight: bold;
+}
 .container {
- 
-    border: 2px solid black; 
+    display: flex; 
+    flex-direction: row;
+    border: 3px solid black; 
     box-shadow: 2px 2px gray; 
+    border-radius: 5px; 
 } 
 
 .trash {
-   
+    position: absolute;
     right: 0;
+    margin-right: min(120px, 200px);
+    margin-top: 20px; 
+    font-weight: bold;
     color: red;
+}
+
+.trash:hover {
+    opacity: 0.5;
+}
+
+button {
+    margin-bottom: 20px; 
+    margin-left: max(1300px, 920px);
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 15px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; 
+    font-weight: bold;
+    background-color: #E4DCCF;
+} 
+
+button:hover {
+    box-shadow: 2px 2px black; 
+    opacity: 0.5;
 }
 </style>
