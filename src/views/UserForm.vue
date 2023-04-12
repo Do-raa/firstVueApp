@@ -51,7 +51,7 @@ export default {
             if(this.name === "" || this.email === "" || (this.isFemale === false && this.isMale === false) ) return alert('All fields are required !')
     
             this.$store.dispatch('createUser', user)
-            router.push({path: '/users'})
+            router.push({path: '/'})
             
             this.name = "";
             this.email = "";
