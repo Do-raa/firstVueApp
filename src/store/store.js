@@ -14,9 +14,7 @@ export default new Vuex.Store({
     isFemale: false,
     users: [],
   },
-  getters: { 
-  },
-  mutations: { //to perform methods on the state 
+  mutations: { 
     setName(state, value) {
         state.name = value
     }, 
@@ -38,6 +36,9 @@ export default new Vuex.Store({
     }, 
     addUser(state, user) {
       state.users.push(user)
+    }, 
+    updateUser(state, newUser) {
+      state.users.map(user => user.id === newUser.id? user = newUser : user)
     }
   },
   actions: {  
@@ -81,6 +82,24 @@ export default new Vuex.Store({
           })
       .then(() => commit('deleteUser', id))
       .catch(error => console.log(error) 
-      )}
+    )},
+
+    async updateUser({commit}, user) {
+      const accessToken = '7b818a774d5d19fd0e06afe908ebec814926a562b1ee86ea201d6655aebdf55f' 
+      await axios.put(`https://gorest.co.in/public/v2/users/${user.id}`, user, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}` 
+        }
+    }) 
+      .then((response) =>{commit('updateUser', response.data)} )
+      .catch(error => console.log(error))
     }
+  },
+  getters: { 
+    userToEdit:(state) => (id) => {
+      return state.users.filter(user => user.id == id )
+    }
+  },
 })

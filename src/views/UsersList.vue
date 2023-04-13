@@ -7,6 +7,9 @@
                 <div class="content">
                     <li>{{ user.name }}</li> 
                     <p>{{ user.email }}</p> 
+                </div> 
+                <div id="edit-icon" @click="editUser(user.id)">
+                    <i class="fas fa-edit"></i>
                 </div>
                 <div class="trash" @click="deleteUser(user.id)">
                     <p>X</p>
@@ -18,7 +21,9 @@
 
 
 <script> 
-import router from '../router'
+import router from '../router' 
+import '@fortawesome/fontawesome-free/css/all.css'
+
 
 export default {
     //name: 'UsersList', 
@@ -28,7 +33,7 @@ export default {
                 return this.$store.state.users
             }, 
             set( user ) {
-                return this.$store.commit('setUsers', user)
+                return this.$store.commit('setUser', user)
             }
         }
     }, 
@@ -39,7 +44,13 @@ export default {
         }, 
         redirect() {
             router.push({path: '/addUser', replace: true})
+        }, 
+        editUser(id) {
+            router.push({ path: `/edit/${id}` }) 
         }
+    },
+    created() { 
+        this.$store.dispatch('fetchUsers');
     },
     mounted() { 
         this.$store.dispatch('fetchUsers');
@@ -88,9 +99,10 @@ li {
     opacity: 0.5;
 }
 
-button {
+button { 
+    margin-left: max(85vw);
     margin-bottom: 20px; 
-    margin-left: max(1300px, 920px);
+    margin-right: 10px;
     border-radius: 5px;
     padding: 8px;
     font-size: 15px;
@@ -101,6 +113,19 @@ button {
 
 button:hover {
     box-shadow: 2px 2px black; 
+    opacity: 0.5;
+} 
+
+#edit-icon {
+    position: absolute;
+    right: 0;
+    margin-right: min(150px, 200px);
+    margin-top: 20px; 
+    font-weight: bold; 
+    color: #577D86;
+} 
+
+#edit-icon:hover {
     opacity: 0.5;
 }
 </style>

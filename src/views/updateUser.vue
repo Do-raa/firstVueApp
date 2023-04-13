@@ -1,17 +1,16 @@
 <template>
     <div class="all"> 
-        <h2>ADD USER</h2>
+        <h2>EDIT USER</h2>
         <form @submit="onSubmit"> 
             <div class="mb-6">
                 <label for="exampleInputName1" class="form-label">Name :</label>
-                <input type="text" class="form-control" id="exampleInputName1" v-model="name" placeholder="Please enter your name">
+                <input type="text" class="form-control" id="exampleInputName1" v-model="user.name" placeholder="Please enter your name">
             </div>
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email address :</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" v-model="email" placeholder="Please enter your email">
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" v-model="user.email" placeholder="Please enter your email">
                 <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
             </div>
-            
             <div class="mb-3 form-check">
                 <input id="checkbox" type="checkbox"  v-model="isMale">
                 <label class="form-check-label" for="exampleCheck1">Male</label>
@@ -20,7 +19,7 @@
                 <input id="checkbox" type="checkbox" v-model="isFemale">
                 <label class="form-check-label" for="exampleCheck1">Female</label>
             </div>
-            <button type="submit">Submit</button>
+            <button type="submit">Update</button>
         </form> 
     </div>
 </template> 
@@ -38,42 +37,29 @@ export default {
     name: 'UserForm', 
     data() {
         return {
+            user: {
+                id: '',
+                name: '',
+                email: '',
+                gender: '', 
+                status: ''
+            }
         }
     }, 
     methods: {
         onSubmit(e) { 
             e.preventDefault() 
             const gender = this.isMale? 'male': 'female'  
-            const user = {id: Math.floor(Math.random() * 100), name: this.name, email: this.email, gender: gender, status: "active"}
+            const user = {id: this.user.id, name: this.user.name, email: this.user.email, gender: gender, status: this.user.status}
 
             if(this.name === "" || this.email === "" || (this.isFemale === false && this.isMale === false) ) return alert('All fields are required !')
     
-            this.$store.dispatch('createUser', user)
+            this.$store.dispatch('updateUser', user)
             router.push({path: '/'})
             
-            this.name = "";
-            this.email = "";
-            this.isFemale = false;
-            this.isMale = false;
-        }
+        }, 
     },
     computed: { 
-        name: {
-            get() {
-                return this.$store.state.name 
-            }, 
-            set( value ) {
-                return this.$store.commit('setName', value)
-            }
-        },
-        email: {
-            get() {
-                return this.$store.state.email 
-            }, 
-            set( value ) {
-                return this.$store.commit('setEmail', value)
-            }
-        },
         isFemale: {
             get() {
                 return this.$store.state.isFemale
@@ -89,16 +75,16 @@ export default {
             set( value ) {
                 return this.$store.commit('isMale', value)
             }
-        }, 
-        users: { 
-            get() {
-                return this.$store.state.users
-            }, 
-            set( user ) {
-                return this.$store.commit('setUsers', user)
-            }
-        }
-    }
+        },  
+    }, 
+    beforeMount() { 
+        const userId = this.$route.params.id
+        this.user = this.$store.getters.userToEdit(userId)[0]
+    },
+    // mounted() { 
+    //     const userId = this.$route.params.id
+    //     this.user = this.$store.getters.userToEdit(userId)[0]
+    // }, 
 }
 </script> 
 
