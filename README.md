@@ -1,4 +1,4 @@
-# vue_state_app
+# users_vue_app
 
 ## Project setup
 ```
